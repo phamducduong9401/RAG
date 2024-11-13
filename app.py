@@ -74,35 +74,36 @@ def qa(original_query,db,llm):
 def main():
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-    # ローカルに保存されているモデルのパスを指定
-    model_path = '/home/RAG/model'
+    # # ローカルに保存されているモデルのパスを指定
+    # model_path = '/home/RAG/model'
 
-    try:
-        # モデルとトークナイザをロード
-        tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
-        model = AutoModel.from_pretrained(model_path, local_files_only=True)
+    # try:
+    #     # モデルとトークナイザをロード
+    #     tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
+    #     model = AutoModel.from_pretrained(model_path, local_files_only=True)
 
-        # SentenceTransformer用にラップ
-        transformer_model = models.Transformer(model_path)
-        pooling_model = models.Pooling(transformer_model.get_word_embedding_dimension())
-        model = SentenceTransformer(modules=[transformer_model, pooling_model])   
+    #     # SentenceTransformer用にラップ
+    #     transformer_model = models.Transformer(model_path)
+    #     pooling_model = models.Pooling(transformer_model.get_word_embedding_dimension())
+    #     model = SentenceTransformer(modules=[transformer_model, pooling_model])   
 
-        # 埋め込み関数を定義
-        class SentenceTransformerEmbeddingFunction:
-            def __init__(self, model):
-                self.model = model
+    #     # 埋め込み関数を定義
+    #     class SentenceTransformerEmbeddingFunction:
+    #         def __init__(self, model):
+    #             self.model = model
             
-            def embed_documents(self, texts):
-                return self.model.encode(texts).tolist()
+    #         def embed_documents(self, texts):
+    #             return self.model.encode(texts).tolist()
             
-            def embed_query(self, text):
-                return self.model.encode([text])[0].tolist()
+    #         def embed_query(self, text):
+    #             return self.model.encode([text])[0].tolist()
 
-        # 埋め込み関数のインスタンスを作成
-        embedding_function = SentenceTransformerEmbeddingFunction(model)
+    #     # 埋め込み関数のインスタンスを作成
+    #     embedding_function = SentenceTransformerEmbeddingFunction(model)
 
-    except Exception as e:
-        print(f"エラーが発生しました: {e}")
+    # except Exception as e:
+    #     print(f"エラーが発生しました: {e}")
+    embedding_function = SentenceTransformer("intfloat/multilingual-e5-large")
     db = load_db(embedding_function)
     init_page()
 
