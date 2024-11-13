@@ -6,7 +6,7 @@ from langchain_chroma import Chroma
 from sentence_transformers import CrossEncoder
 
 def load_db(embedding_function):
-    return Chroma(persist_directory="/home/RAG/dblast1.db",embedding_function=embedding_function)
+    return Chroma(persist_directory="dblast1.db",embedding_function=embedding_function)
 
 def augment_multiple_query(query,llm):
     messages = [
@@ -44,7 +44,7 @@ def init_page():
         page_icon='🧑‍💻',
     )
 def qa(original_query,db,llm):
-    cross_encoder = CrossEncoder('/home/RAG/cross_rank')
+    cross_encoder = CrossEncoder('cross_rank')
     augmented_queries = augment_multiple_query(original_query,llm)
     augmented_queries = [augmented_querie.strip() for augmented_querie in augmented_queries if augmented_querie.strip()]
     augmented_queries.append(original_query)
